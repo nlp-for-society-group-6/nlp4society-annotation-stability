@@ -1,0 +1,2 @@
+openai>=1.40        # OpenAI-compatible client; works for Groq + Together
+datasets>=2.19      # Hugging Face datasets (MHS, CREHate)
