@@ -1,4 +1,4 @@
-"""Provider abstraction. This is the ONLY thing a teammate implements.
+"""Provider abstraction.
 
 To add a model:
     1. subclass Client
@@ -6,7 +6,6 @@ To add a model:
     3. register it in clients.py REGISTRY
 
 Everything else (seed loops, retries, output format, parsing) is shared.
-The interface is deliberately tiny: one method, one return type.
 """
 from __future__ import annotations
 

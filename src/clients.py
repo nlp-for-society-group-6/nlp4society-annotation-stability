@@ -1,8 +1,7 @@
 """Concrete provider clients + the registry.
 
-Groq is the reference implementation (your task). Teammates copy the pattern.
-All clients use the OpenAI-compatible surface so the body is nearly identical
-across providers; only base_url, api key env var, and logprob handling differ.
+All included clients use the OpenAI-compatible surface; only base_url, api key
+env var, and logprob handling differ. Add new providers by subclassing Client.
 """
 from __future__ import annotations
 
@@ -92,7 +91,7 @@ class TogetherClient(Client):
         )
 
 
-# Teammates register their model here. Key = the --client CLI value.
+# Key = the --client CLI value passed to run_inference.py.
 REGISTRY = {
     "groq": GroqClient,
     "together": TogetherClient,

@@ -1,7 +1,6 @@
 """Stage 2 runner: read items.jsonl, run a client over seeds, write run records.
 
-Shared by every model. A teammate never edits this; they only register a
-client. Key properties:
+Shared by every model. Key properties:
   * Resumable: skips (item_id, seed) pairs already present in the output file,
     so a 429 crash mid-run loses nothing. Important on a rate-limited free tier.
   * Fail-soft: a call that errors after retries is written as a RunRecord with

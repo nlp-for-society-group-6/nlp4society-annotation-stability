@@ -57,8 +57,16 @@ class MyClient(Client):
     def generate(self, prompt: str, seed: int) -> Completion:
         # call your model with SYSTEM_PROMPT + prompt
         return Completion(raw_text=..., logprob=None, finish_reason=...)
+```
 
-REGISTRY["myprovider"] = MyClient
+Then add an entry to `REGISTRY` at the bottom of `src/clients.py`:
+
+```python
+REGISTRY = {
+    "groq": GroqClient,
+    "together": TogetherClient,
+    "myprovider": MyClient,   # add this line
+}
 ```
 
 Then run Stage 2 with `--client myprovider`.

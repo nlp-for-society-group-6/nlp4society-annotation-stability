@@ -1,10 +1,8 @@
 """Stage 2: run inference for ONE model over items.jsonl.
 
-This is what each teammate runs for their own model. They don't edit it:
-they pass --client. Resumable and rate-limit-safe via the shared runner.
+Pass --client to select the provider. Resumable and rate-limit-safe via the shared runner.
 
 Examples:
-    export GROQ_API_KEY=...
     python scripts/run_inference.py --client groq \
         --model llama-3.1-8b-instant --seeds 5 \
         --items data/interim/items.jsonl \
