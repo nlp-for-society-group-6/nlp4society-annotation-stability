@@ -5,6 +5,8 @@ env var, and logprob handling differ. Add new providers by subclassing Client.
 """
 from __future__ import annotations
 
+import json as _json
+import math
 import os
 from client import Client, Completion, SYSTEM_PROMPT
 
@@ -91,12 +93,91 @@ class TogetherClient(Client):
         )
 
 
+class HateXplainClient(Client):
+    """BERT-HateXplain encoder baseline. Deterministic — seed is ignored.
+
+    NOT HateBERT (GroNLP/hateBERT, pre-trained on Reddit).
+    This is standard BERT fine-tuned on the HateXplain dataset (Gab + Twitter).
+    Its 3-class output (Hatespeech / Offensive / Normal) is collapsed to binary
+    via collapse_rule:
+      "hate_or_offensive" (default) — treats Offensive as hate (matches MHS framing)
+      "hate_only"                   — restricts to Hatespeech class only
+
+    SYSTEM_PROMPT is not used — this is a classifier, not a generative model.
+
+    logprob is log(P(binary_label)) from the model's softmax — a richer confidence
+    signal than the LLM providers can give.
+
+    Because this model is deterministic, run Stage 2 with --seeds 1.
+    flip_rate and output_entropy in scored.csv will both be 0, which is the expected
+    result for a deterministic baseline.
+    """
+    provider = "hf"
+
+    _HATE_NAMES_BY_RULE = {
+        "hate_only":         {"hate speech", "hatespeech", "hate"},
+        "hate_or_offensive": {"hate speech", "hatespeech", "hate", "offensive"},
+    }
+
+    def __init__(self, model_name: str = "Hate-speech-CNERG/bert-base-uncased-hatexplain",
+                 temperature: float = 0.7, collapse_rule: str = "hate_or_offensive"):
+        super().__init__(model_name, temperature)
+        import torch
+        from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+        self._torch = torch
+        self._device = "cuda" if torch.cuda.is_available() else "cpu"
+        self._tok = AutoTokenizer.from_pretrained(model_name)
+        self._model = (
+            AutoModelForSequenceClassification
+            .from_pretrained(model_name)
+            .to(self._device)
+            .eval()
+        )
+
+        id2label = {int(k): v for k, v in self._model.config.id2label.items()}
+        assert self._tok.vocab_size == self._model.config.vocab_size, (
+            f"Vocab mismatch: tokenizer {self._tok.vocab_size} "
+            f"vs model {self._model.config.vocab_size}"
+        )
+        hate_names = self._HATE_NAMES_BY_RULE[collapse_rule]
+        self._hate_idxs = {
+            i for i, name in id2label.items()
+            if name.strip().lower() in hate_names
+        }
+        assert self._hate_idxs, (
+            f"No class names matched rule '{collapse_rule}'. id2label: {id2label}"
+        )
+
+    def generate(self, prompt: str, seed: int) -> Completion:
+        with self._torch.no_grad():
+            enc = self._tok(
+                [prompt], padding=True, truncation=True,
+                max_length=256, return_tensors="pt",
+            ).to(self._device)
+            probs = (
+                self._torch.softmax(self._model(**enc).logits[0], dim=0)
+                .cpu()
+                .tolist()
+            )
+
+        p_hate = sum(probs[i] for i in self._hate_idxs)
+        label = "hate" if p_hate >= 0.5 else "not_hate"
+        lp = math.log(p_hate if label == "hate" else 1.0 - p_hate)
+
+        return Completion(
+            raw_text=_json.dumps({"label": label}),
+            logprob=lp,
+            finish_reason="stop",
+        )
+
+
 # Key = the --client CLI value passed to run_inference.py.
 REGISTRY = {
     "groq": GroqClient,
     "together": TogetherClient,
+    "hatexplain": HateXplainClient, #aradhana 
     # "mistral": MistralClient,    # nico
-    # "hatebert": HateBertClient,  # aradhana (encoder baseline; see note in README)
 }
 
 

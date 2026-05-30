@@ -1,2 +1,4 @@
 openai>=1.40        # OpenAI-compatible client; works for Groq + Together
 datasets>=2.19      # Hugging Face datasets (MHS, CREHate)
+transformers>=4.40  # HateXplainClient encoder baseline
+torch>=2.0          # HateXplainClient inference
