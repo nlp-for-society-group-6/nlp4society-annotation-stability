@@ -33,8 +33,16 @@ def _already_done(path: Path) -> set[tuple[str, int, str]]:
             if not ln.strip():
                 continue
             r = RunRecord.from_json(ln)
-            done.add((r.item_id, r.seed, r.model_name))
+            if r.error is None:
+                done.add((r.item_id, r.seed, r.model_name))
     return done
+
+
+def _is_daily_quota_error(error_text: str) -> bool:
+    """True for hard daily quota exhaustion, not ordinary per-minute throttles."""
+    text = error_text.lower()
+    daily_markers = ("daily", "per day", "requestsperday", "request per day")
+    return "quota" in text and any(marker in text for marker in daily_markers)
 
 
 def _call_with_retry(client: Client, prompt: str, seed: int,
@@ -46,12 +54,14 @@ def _call_with_retry(client: Client, prompt: str, seed: int,
         try:
             t0 = time.perf_counter()
             comp = client.generate(prompt, seed)
-            return comp, time.perf_counter() - t0, None
+            return comp, time.perf_counter() - t0, None, False
         except Exception as e:  # noqa: BLE001  - we want to log everything
             last_err = e
+            if _is_daily_quota_error(repr(e)):
+                return None, None, repr(e), True
             time.sleep(delay + random.uniform(0, 1))
             delay = min(delay * 2, 60)
-    return None, None, repr(last_err)
+    return None, None, repr(last_err), False
 
 
 def run(client: Client, items: Iterable[InputItem], seeds: list[int],
@@ -68,7 +78,14 @@ def run(client: Client, items: Iterable[InputItem], seeds: list[int],
                 key = (item.item_id, seed, client.model_name)
                 if key in done:
                     continue
-                comp, latency, err = _call_with_retry(client, item.text, seed)
+                comp, latency, err, quota_exhausted = _call_with_retry(client, item.text, seed)
+                if quota_exhausted:
+                    print(
+                        "daily quota exhausted; stopping. "
+                        "Rerun this same command after the quota resets.",
+                        flush=True,
+                    )
+                    return
                 rec = RunRecord(
                     item_id=item.item_id,
                     model_name=client.model_name,

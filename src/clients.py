@@ -91,7 +91,55 @@ class TogetherClient(Client):
             logprob=lp,
             finish_reason=choice.finish_reason,
         )
+    
+class GeminiClient(Client):
+    """Google Gemini via the native google-genai SDK. Free AI Studio tier.
 
+    NOTE on shape: unlike GroqClient/TogetherClient, this client does NOT use
+    the OpenAI SDK. Gemini's OpenAI-compatibility layer silently strips
+    `seed` and `logprobs` as unknown fields, which makes seed-variation
+    experiments meaningless. The native SDK accepts `seed` properly.
+
+    Notes that matter for this project:
+      * Free tier rate limits: ~10-15 RPM and ~1,500 RPD per model.
+        Each Gemini model has its own daily bucket.
+      * `seed` is best-effort (same caveat as Groq/Together) but is honored.
+      * Logprobs are gated off the free tier as of mid-2026 — logprob stays None.
+      * `gemini-2.5-flash-lite` has thinking off by default. For 2.5-flash you
+        would want thinking_config=ThinkingConfig(thinking_budget=0) explicitly.
+    """
+    provider = "gemini"
+
+    def __init__(self, model_name: str = "gemini-2.5-flash-lite", temperature: float = 0.7):
+        super().__init__(model_name, temperature)
+        from google import genai
+        self._genai = genai
+        self._client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+
+    def generate(self, prompt: str, seed: int) -> Completion:
+        from google.genai import types
+        resp = self._client.models.generate_content(
+            model=self.model_name,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=self.temperature,
+                seed=seed,
+                max_output_tokens=20,
+                response_mime_type="application/json",
+                thinking_config=types.ThinkingConfig(thinking_budget=0),
+            ),
+        )
+        finish = None
+        try:
+            finish = str(resp.candidates[0].finish_reason)
+        except (AttributeError, IndexError):
+            pass
+        return Completion(
+            raw_text=resp.text or "",
+            logprob=None,
+            finish_reason=finish,
+        )
 
 class HateXplainClient(Client):
     """BERT-HateXplain encoder baseline. Deterministic — seed is ignored.
@@ -176,6 +224,7 @@ class HateXplainClient(Client):
 REGISTRY = {
     "groq": GroqClient,
     "together": TogetherClient,
+    "gemini": GeminiClient,        # add this line
     "hatexplain": HateXplainClient, #aradhana 
     # "mistral": MistralClient,    # nico
 }
