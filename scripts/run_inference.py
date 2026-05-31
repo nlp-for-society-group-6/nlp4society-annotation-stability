@@ -12,7 +12,8 @@ Examples:
     python scripts/run_inference.py --client groq --seeds 10 ...
 """
 from __future__ import annotations
-
+from dotenv import load_dotenv
+load_dotenv()
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "src"))
 
@@ -28,7 +29,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--client", required=True, help="registered client key, e.g. groq")
     ap.add_argument("--model", default=None, help="override model_name for the client")
-    ap.add_argument("--items", default="data/interim/items.jsonl")
+    ap.add_argument("--items", default="data/interim/mhs_items.jsonl")
     ap.add_argument("--out", required=True)
     ap.add_argument("--seeds", type=int, default=5, help="number of seeds (1..N)")
     ap.add_argument("--seed-base", type=int, default=1000,

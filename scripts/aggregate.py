@@ -5,7 +5,7 @@ Outputs a tidy CSV: one row per (item_id, model_name) with both signals.
 This is intentionally minimal: it gives person C a clean table to start from.
 
     python scripts/aggregate.py \
-        --items data/interim/items.jsonl \
+        --items data/interim/mhs_items.jsonl \
         --runs data/outputs/runs_groq_llama8b.jsonl data/outputs/runs_mistral.jsonl \
         --out data/outputs/scored.csv
 """
@@ -47,7 +47,7 @@ def flip_rate(labels: list[str]) -> float:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--items", default="data/interim/items.jsonl")
+    ap.add_argument("--items", default="data/interim/mhs_items.jsonl")
     ap.add_argument("--runs", nargs="+", required=True)
     ap.add_argument("--out", default="data/outputs/scored.csv")
     args = ap.parse_args()

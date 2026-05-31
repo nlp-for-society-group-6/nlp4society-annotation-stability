@@ -7,7 +7,7 @@ comment). We aggregate to one InputItem per comment, computing:
   * disagreement_tier  : low/medium/high by entropy terciles (fixed here, once)
 
 Run:
-    python scripts/build_mhs_items.py --n 200 --out data/interim/items.jsonl
+    python scripts/build_mhs_items.py --n 200 --out data/interim/mhs_items.jsonl
 
 --n takes a stratified pilot sample (default: all). Start small to sanity-check
 the whole pipeline before spending rate-limited inference budget.
@@ -76,7 +76,7 @@ def assign_tiers(items: list[InputItem]) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=0, help="pilot sample size; 0 = all")
-    ap.add_argument("--out", default="data/interim/items.jsonl")
+    ap.add_argument("--out", default="data/interim/mhs_items.jsonl")
     ap.add_argument("--seed", type=int, default=13)
     args = ap.parse_args()
 
