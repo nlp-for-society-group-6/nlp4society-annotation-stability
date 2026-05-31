@@ -220,13 +220,73 @@ class HateXplainClient(Client):
         )
 
 
+class MistralClient(Client):
+    """Mistral 7B via local transformers inference (CPU or GPU).
+
+    Downloads mistralai/Mistral-7B-Instruct-v0.3 on first run (~14GB).
+    No API key needed. Slower on CPU but fully free and local.
+    Behaves like other clients (same `generate` signature and `provider`),
+    but internally uses a local HF model.
+    """
+    provider = "mistral"
+
+    def __init__(self, model_name: str = "mistralai/Mistral-7B-Instruct-v0.3", temperature: float = 0.7):
+        super().__init__(model_name, temperature)
+        from transformers import AutoTokenizer, AutoModelForCausalLM
+        import torch
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="auto",
+            torch_dtype=torch.float32,  # Use float32 for CPU compatibility
+        )
+
+    def generate(self, prompt: str, seed: int) -> Completion:
+        import torch
+        torch.manual_seed(seed)
+        
+        # Build the conversation
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ]
+        # Render the chat to the model input and get input token length so we
+        # can decode only the newly-generated tokens (not the entire prompt).
+        text = self.tokenizer.apply_chat_template(messages, tokenize=False)
+        inputs = self.tokenizer(text, return_tensors="pt")
+        inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+        input_len = inputs["input_ids"].shape[1]
+
+        # Generate continuation and decode only new tokens
+        outputs = self.model.generate(
+            **inputs,
+            max_new_tokens=20,
+            temperature=self.temperature,
+            top_p=0.9,
+            do_sample=True,
+        )
+        seq = outputs[0]
+        # If model returned input+generation, slice off the input portion
+        if seq.shape[0] > input_len:
+            gen_tokens = seq[input_len:]
+        else:
+            gen_tokens = seq
+        raw_text = self.tokenizer.decode(gen_tokens, skip_special_tokens=True).strip()
+        
+        return Completion(
+            raw_text=raw_text,
+            logprob=None,
+            finish_reason="length",
+        )
+
+
 # Key = the --client CLI value passed to run_inference.py.
 REGISTRY = {
     "groq": GroqClient,
     "together": TogetherClient,
-    "gemini": GeminiClient,        # add this line
-    "hatexplain": HateXplainClient, #aradhana 
-    # "mistral": MistralClient,    # nico
+    "gemini": GeminiClient,
+    "hatexplain": HateXplainClient,
+    "mistral": MistralClient,
 }
 
 
