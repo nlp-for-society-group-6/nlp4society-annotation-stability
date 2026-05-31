@@ -71,9 +71,26 @@ REGISTRY = {
 
 Then run Stage 2 with `--client myprovider`.
 
-`SYSTEM_PROMPT` (defined in `src/client.py`) must stay identical across all models — it is the fairness condition for the comparison.
+`SYSTEM_PROMPT` (defined in `src/client.py`) must stay identical across all models — it is the fairness condition for the comparison. **Exception: encoder/classifier models** (e.g. HateXplainClient) do not use `SYSTEM_PROMPT` at all; the runner passes `item.text` directly to `generate`, which feeds it straight to the tokenizer.
 
 If your model does not expose logprobs, set `logprob=None`; stability is then label-only (flip rate + entropy across seeds).
+
+### Encoder / classifier baselines
+
+Deterministic classifiers (no sampling) always produce the same output for a given text. Run Stage 2 with `--seeds 1` to avoid redundant inference. `llm_flip_rate` and `llm_output_entropy` in `scored.csv` will be 0 for these models by construction — that is the expected result, not a bug. Use the baseline for accuracy comparisons against `gold_label`, not for the instability analysis.
+
+The registered encoder baseline:
+
+| `--client` | Model | Notes |
+|---|---|---|
+| `hatexplain` | `Hate-speech-CNERG/bert-base-uncased-hatexplain` | Standard BERT fine-tuned on HateXplain (Gab + Twitter). **Not** HateBERT (`GroNLP/hateBERT`), which is a different model. 3-class output collapsed to binary; default rule: `hate_or_offensive`. `logprob` is `log(P(binary_label))` from the softmax. |
+
+```bash
+python scripts/run_inference.py \
+    --client hatexplain --seeds 1 \
+    --items data/interim/items.jsonl \
+    --out data/outputs/runs_hatexplain.jsonl
+```
 
 ## Schemas
 
