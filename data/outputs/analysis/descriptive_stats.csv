@@ -1,0 +1,21 @@
+model,dataset,tier,n,mean_flip_rate,std_flip_rate,median_flip_rate
+Gemini 2.5 Flash,crehate,low,66,0.003,0.0246,0.0
+Gemini 2.5 Flash,crehate,high,66,0.0121,0.0595,0.0
+Gemini 2.5 Flash,mhs,low,66,0.003,0.0246,0.0
+Gemini 2.5 Flash,mhs,medium,66,0.0061,0.0492,0.0
+Gemini 2.5 Flash,mhs,high,66,0.0303,0.0944,0.0
+HateXplain,crehate,low,66,0.0,0.0,0.0
+HateXplain,crehate,high,66,0.0,0.0,0.0
+HateXplain,mhs,low,66,0.0,0.0,0.0
+HateXplain,mhs,medium,66,0.0,0.0,0.0
+HateXplain,mhs,high,66,0.0,0.0,0.0
+Llama 3.1 8B,crehate,low,65,0.0369,0.1167,0.0
+Llama 3.1 8B,crehate,high,66,0.0788,0.1603,0.0
+Llama 3.1 8B,mhs,low,66,0.0485,0.1315,0.0
+Llama 3.1 8B,mhs,medium,66,0.0545,0.1383,0.0
+Llama 3.1 8B,mhs,high,66,0.0293,0.1034,0.0
+Mistral 7B,crehate,low,66,0.003,0.0246,0.0
+Mistral 7B,crehate,high,66,0.0121,0.0691,0.0
+Mistral 7B,mhs,low,66,0.0121,0.0691,0.0
+Mistral 7B,mhs,medium,66,0.0121,0.0691,0.0
+Mistral 7B,mhs,high,66,0.0182,0.0763,0.0
