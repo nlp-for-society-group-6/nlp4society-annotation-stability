@@ -1,0 +1,23 @@
+item_id,dataset,human_entropy,disagreement_var,n_annotators,gold_label,models_flipping,n_models_flipping,suggested_type,content_type,notes,gemini_flip_rate,gemini_label,mistral_flip_rate,mistral_label,llama_flip_rate,llama_label,text
+crehate-SBIC-456,crehate,0.971,0.6,5,hate,gemini|llama,2,other,Explicit,,0.2,hate,0.0,not_hate,0.4,not_hate,If you don’t have a self story to tell about “Sexual Assault” either you are; or were not charming or you are out of fashion- #MeToo
+crehate-SBIC-750,crehate,0.971,0.6,5,hate,llama,1,irony_humour,Explicit (sexual),,0.0,hate,0.0,not_hate,0.4,not_hate,"What's black and blue, and doesn't like sex? The kid in my trunk."
+crehate-ZA-Reddit-71,crehate,0.971,0.6,5,not_hate,llama,1,implicit_coded,,,0.0,hate,0.0,not_hate,0.4,not_hate,"This is what happens when BEE is brought into academia. 
+
+""You must not ask a monkey to do a lion's job.""
+Kenyan proverb."
+crehate-SBIC-613,crehate,0.971,0.6,5,not_hate,llama,1,other,Dark joke,,0.0,hate,0.0,not_hate,0.4,not_hate,The Twin Towers were full of Nazis. They did Nazi the planes coming.
+crehate-AU-Reddit-71,crehate,0.971,0.6,5,hate,llama,1,other,,,0.0,not_hate,0.0,not_hate,0.4,not_hate,"Ah the irony, when Australians become the boat people."
+crehate-SBIC-582,crehate,0.971,0.6,5,hate,gemini,1,explicit_no_target,Explicit (sexual),,0.4,not_hate,0.0,hate,0.0,hate,Smack these hoes on they ass like we birthed these bitches
+crehate-SG-Reddit-46,crehate,0.971,0.6,5,not_hate,llama,1,explicit_no_target,Explicit,,0.0,not_hate,0.0,not_hate,0.4,not_hate,"Gays are still human. From here you can see the black gay being a dick to Mr Kim while the other gay is understanding. 
+
+Be like Mr Kim. You do you, I do I."
+crehate-SBIC-93,crehate,0.971,0.6,5,hate,gemini,1,other,Offensive/ Slur,,0.2,not_hate,0.0,hate,0.0,not_hate,"@USER yeah that niggah played good, lowkey i wanted brazil to win"
+crehate-SBIC-880,crehate,0.971,0.6,5,hate,mistral,1,other,Offensive,,0.0,not_hate,0.4,not_hate,0.0,hate,hey have you seen rolling thunder ? last time i saw him he was burning rubber with the new wheelchair he got from his disability benefits outside of wal - mart .
+crehate-AU-Reddit-13,crehate,0.7219,0.4,5,not_hate,mistral,1,other,Offensive,,0.0,hate,0.4,hate,0.0,hate,Being a real estate agent requires no education and is everyone's fallback job. Are you really surprised that they're cunts? They're just being them.
+crehate-SBIC-723,crehate,0.7219,0.4,5,not_hate,llama,1,other,Dark joke,,0.0,not_hate,0.0,not_hate,0.4,hate,What does a homeless man get every day that a normal person doesn't? Hungry.
+crehate-AU-YouTube-1,crehate,0.7219,0.4,5,not_hate,llama,1,political_speech,Conspiracy/Political,,0.0,not_hate,0.0,not_hate,0.4,hate,"American propaganda, nothing comes out of the US is true, the terrorist cia has been committing much worse crimes"
+crehate-GB-YouTube-44,crehate,0.7219,0.4,5,not_hate,llama,1,political_speech,Political,,0.0,not_hate,0.0,not_hate,0.4,hate,Labour councillor helping illegal immigrants bypass U.K. immigration laws ! How is this being tolerated by the Labour Party ?
+crehate-SBIC-434,crehate,0.7219,0.4,5,not_hate,llama,1,explicit_no_target,Sexual/pedophilia,,0.0,not_hate,0.0,not_hate,0.4,hate,I'm fucking sick of double standards! Santa can go into a child's room and empty his sack but when i do it it's all tears and policemen.
+crehate-ZA-YouTube-44,crehate,0.7219,0.4,5,not_hate,llama,1,other,,,0.0,not_hate,0.0,not_hate,0.4,not_hate,Soon only the monkeys will be left at the circus
+crehate-SBIC-501,crehate,0.7219,0.4,5,hate,llama,1,other,Offensive,,0.0,hate,0.0,not_hate,0.4,hate,MeToo Movement Femoid Likens Being Hit on in Public to Being Mugged.
+crehate-SBIC-754,crehate,0.7219,0.4,5,not_hate,llama,1,other,Offensive,,0.0,not_hate,0.0,not_hate,0.4,not_hate,What's she got that stick for if she can read [that book]?

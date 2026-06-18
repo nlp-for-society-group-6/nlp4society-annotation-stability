@@ -7,10 +7,10 @@ Reads all scored CSVs, runs:
   4. Mann-Whitney U     (pairwise tier comparisons, per model x dataset)
   5. Plots              (box plots per tier, scatter flip_rate vs human_entropy)
 
-Outputs written to data/outputs/analysis/
+Outputs written to data/outputs/quantitative_analysis/
 
 Run:
-    python scripts/analyse.py
+    python scripts/quantitative_analysis.py
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ MODEL_LABELS = {
 }
 
 TIER_ORDER     = ["low", "medium", "high"]
-OUT_DIR        = Path("data/outputs/analysis")
+OUT_DIR        = Path("data/outputs/quantitative_analysis")
 EXCLUDE_MODELS = {"HateXplain"}  # fully deterministic — excluded from plots
 
 MODEL_ORDER  = ["Gemini 2.5 Flash", "Mistral 7B", "Llama 3.1 8B"]

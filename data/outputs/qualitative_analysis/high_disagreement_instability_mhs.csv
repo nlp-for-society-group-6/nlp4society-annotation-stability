@@ -1,0 +1,16 @@
+item_id,dataset,human_entropy,disagreement_var,n_annotators,gold_label,models_flipping,n_models_flipping,suggested_type,content_type,content_type,gemini_flip_rate,gemini_label,mistral_flip_rate,mistral_label,llama_flip_rate,llama_label,text
+mhs-25478,mhs,0.8113,0.5,4,hate,gemini|llama,2,explicit_no_target,Offensive,,0.2,hate,0.0,hate,0.4,hate,Eat my ass white america
+mhs-47683,mhs,0.9183,0.6667,3,not_hate,gemini,1,political_speech,Political,,0.4,not_hate,0.0,hate,0.0,hate,"Matt Parsa ... Iran and it's supporters are digging a hole for themselves , America and its allies will make sure that Iran is buried in that hole ."
+mhs-13154,mhs,0.9183,0.6667,3,hate,gemini,1,explicit_no_target,Offensive,,0.2,hate,0.0,hate,0.0,hate,FUCK THAT BITCH
+mhs-44590,mhs,0.9183,0.6667,3,hate,gemini,1,explicit_no_target,Political,,0.2,hate,0.0,not_hate,0.0,not_hate,Mexico should try to be allies with China... watch how quick these white boys will lose their shit
+mhs-25499,mhs,0.9183,0.6667,3,not_hate,llama,1,other,Offensive,,0.0,hate,0.0,not_hate,0.4,hate,Men are trash. Go get a life
+mhs-26821,mhs,0.9183,0.6667,3,hate,mistral,1,explicit_no_target,Explicit,,0.0,not_hate,0.4,hate,0.0,hate,"Got her tits out in a park full of kids, Imagine a man did this, get her locked up and on the register URL"
+mhs-40706,mhs,0.9183,0.6667,3,hate,llama,1,political_speech,Political,,0.0,not_hate,0.0,not_hate,0.4,hate,+Saghar Irani you are not understanding me! All the entities you have named are not as much of a threat to Amerikkkan citizens then the folks that are supposed to have their best interest at heart. Domestic Terrorism threatens Amerikkka more than any outside enemy.
+mhs-21393,mhs,0.9183,0.6667,3,hate,gemini,1,other,Offensive,,0.4,hate,0.0,hate,0.0,hate,@topazprada yes with all the stereotypical lipstick lesbians
+mhs-10762,mhs,0.9183,0.6667,3,not_hate,mistral,1,explicit_no_target,Offensive,,0.0,not_hate,0.2,not_hate,0.0,hate,Fuck this stupid woman.
+mhs-41876,mhs,0.9183,0.6667,3,not_hate,llama,1,explicit_no_target,Political/extremist,,0.0,hate,0.0,not_hate,0.4,hate,"FUCK usa, isis Only do justice"
+mhs-23082,mhs,0.9183,0.6667,3,not_hate,mistral,1,explicit_no_target,Explicit,,0.0,not_hate,0.4,not_hate,0.0,hate,@KimChi_Chic I would NOT lick a straight mans asshole. They don't take care of that shit carefully enough.
+mhs-44820,mhs,0.9183,0.6667,3,hate,gemini,1,explicit_no_target,Offensive,,0.4,not_hate,0.0,not_hate,0.0,hate,The us is a shit country ive lived there trash everywhere paroanoid people a shit hold
+mhs-41534,mhs,0.8113,0.5,4,not_hate,llama,1,other,,,0.0,not_hate,0.0,not_hate,0.3333,hate,Keeps your religious extremism to yourself
+mhs-41437,mhs,0.8113,0.5,4,not_hate,gemini,1,irony_humour,Offensive?,,0.2,not_hate,0.0,hate,0.0,hate,you don't want a black dude? fine here's a black women. LOL
+mhs-21718,mhs,0.8113,0.5,4,hate,mistral,1,political_speech,,,0.0,hate,0.2,not_hate,0.0,hate,@rarply @sansdn Besides you don't peg anyone down. I am a nobody really. As are you. Your obsession about my morals & out of that comes your bitter personal attack show how mentally troubled you really are. And this is probably a collective mental affliction affecting all of Arab Muslim world.
