@@ -22,6 +22,7 @@ from pathlib import Path
 
 from schema import InputItem, RunRecord
 from parsing import parse_label
+from stats import compute_run_stats, write_stats
 
 
 def label_entropy(labels: list[str]) -> float:
@@ -55,22 +56,25 @@ def main() -> None:
     with open(args.items, encoding="utf-8") as f:
         items = {it.item_id: it for it in (InputItem.from_json(l) for l in f if l.strip())}
 
-    # collect parsed labels per (item, model)
+    # collect parsed labels per (item, model); write a per-file stats sidecar
     by_key: dict[tuple[str, str], list[str]] = defaultdict(list)
-    parse_fail = 0
-    total = 0
     for rp in args.runs:
+        rp = Path(rp)
+        stats = compute_run_stats(rp)
+        sidecar = write_stats(rp, stats)
+        print(f"{rp.name}: {stats['parsed_ok']}/{stats['total_rows']} parsed "
+              f"({stats['api_errors']} api errors, {stats['parse_failures']} parse fails) "
+              f"-> {sidecar.name}")
         with open(rp, encoding="utf-8") as f:
             for ln in f:
                 if not ln.strip():
                     continue
                 r = RunRecord.from_json(ln)
-                total += 1
-                lab, reason = parse_label(r.raw_text)
-                if lab is None:
-                    parse_fail += 1
+                if r.error is not None:
                     continue
-                by_key[(r.item_id, r.model_name)].append(lab)
+                lab, _ = parse_label(r.raw_text)
+                if lab is not None:
+                    by_key[(r.item_id, r.model_name)].append(lab)
 
     rows = []
     for (item_id, model), labels in by_key.items():
@@ -96,8 +100,6 @@ def main() -> None:
         w.writeheader()
         w.writerows(rows)
 
-    print(f"parsed {total - parse_fail}/{total} runs "
-          f"({parse_fail} unparseable, {100*parse_fail/max(total,1):.1f}%)")
     print(f"wrote {len(rows)} (item,model) rows -> {out}")
     print("next: person C computes Spearman rho on "
           "llm_flip_rate vs human_entropy, and compares tiers.")
