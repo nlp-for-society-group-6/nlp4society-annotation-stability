@@ -1,0 +1,9 @@
+model,dataset,spearman_rho,p_value,significance,n
+Gemini 2.5 Flash,crehate,0.1504,0.0851,ns,132
+Gemini 2.5 Flash,mhs,0.1738,0.0143,*,198
+HateXplain,crehate,,,ns,132
+HateXplain,mhs,,,ns,198
+Llama 3.1 8B,crehate,0.1378,0.1166,ns,131
+Llama 3.1 8B,mhs,-0.0533,0.4559,ns,198
+Mistral 7B,crehate,0.0523,0.5514,ns,132
+Mistral 7B,mhs,0.0381,0.5945,ns,198
