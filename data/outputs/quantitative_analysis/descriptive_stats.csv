@@ -1,9 +1,9 @@
 model,dataset,tier,n,mean_flip_rate,std_flip_rate,median_flip_rate
-Gemini 2.5 Flash,crehate,low,66,0.003,0.0246,0.0
-Gemini 2.5 Flash,crehate,high,66,0.0121,0.0595,0.0
-Gemini 2.5 Flash,mhs,low,66,0.003,0.0246,0.0
-Gemini 2.5 Flash,mhs,medium,66,0.0061,0.0492,0.0
-Gemini 2.5 Flash,mhs,high,66,0.0303,0.0944,0.0
+Gemini 2.5 Flash,crehate,low,888,0.016,0.0662,0.0
+Gemini 2.5 Flash,crehate,high,692,0.054,0.115,0.0
+Gemini 2.5 Flash,mhs,low,10121,0.0227,0.0793,0.0
+Gemini 2.5 Flash,mhs,medium,123,0.0163,0.0706,0.0
+Gemini 2.5 Flash,mhs,high,7108,0.0422,0.1049,0.0
 HateXplain,crehate,low,66,0.0,0.0,0.0
 HateXplain,crehate,high,66,0.0,0.0,0.0
 HateXplain,mhs,low,66,0.0,0.0,0.0

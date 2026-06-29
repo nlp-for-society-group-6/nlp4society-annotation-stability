@@ -32,8 +32,8 @@ from itertools import combinations
 # ── config ────────────────────────────────────────────────────────────────────
 
 SCORED_FILES = {
-    ("gemini",     "mhs"):       "data/outputs/gemini/mhs_scored.csv",
-    ("gemini",     "crehate"):   "data/outputs/gemini/crehate_scored.csv",
+    ("gemini",     "mhs"):       "data/outputs/gemini/mhs_scored_full.csv",
+    ("gemini",     "crehate"):   "data/outputs/gemini/crehate_scored_full.csv",
     ("mistral",    "mhs"):       "data/outputs/mistral/scored_mhs.csv",
     ("mistral",    "crehate"):   "data/outputs/mistral/scored_crehate.csv",
     ("hatexplain", "mhs"):       "data/outputs/hatexplain/scored_mhs.csv",
