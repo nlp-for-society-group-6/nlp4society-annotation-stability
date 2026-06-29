@@ -110,11 +110,15 @@ class GeminiClient(Client):
     """
     provider = "gemini"
 
-    def __init__(self, model_name: str = "gemini-2.5-flash-lite", temperature: float = 0.7):
+    def __init__(self, model_name: str = "gemini-2.5-flash", temperature: float = 0.7):
         super().__init__(model_name, temperature)
         from google import genai
         self._genai = genai
-        self._client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        self._client = genai.Client(
+            vertexai=True,
+            project=os.environ.get("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0383331397"),
+            location="us-central1",
+        )
 
     def generate(self, prompt: str, seed: int) -> Completion:
         from google.genai import types
@@ -125,7 +129,7 @@ class GeminiClient(Client):
                 system_instruction=SYSTEM_PROMPT,
                 temperature=self.temperature,
                 seed=seed,
-                max_output_tokens=20,
+                max_output_tokens=60,
                 response_mime_type="application/json",
                 thinking_config=types.ThinkingConfig(thinking_budget=0),
             ),
