@@ -1,8 +1,8 @@
 model,dataset,tier_1,tier_2,U_statistic,p_value,significance
-Gemini 2.5 Flash,crehate,low,high,2111.5,0.3117,ns
-Gemini 2.5 Flash,mhs,low,medium,2177.5,1.0,ns
-Gemini 2.5 Flash,mhs,low,high,1978.5,0.0285,*
-Gemini 2.5 Flash,mhs,medium,high,1982.0,0.0314,*
+Gemini 2.5 Flash,crehate,low,high,263537.0,0.0,***
+Gemini 2.5 Flash,mhs,low,medium,639679.0,0.2734,ns
+Gemini 2.5 Flash,mhs,low,high,33390677.5,0.0,***
+Gemini 2.5 Flash,mhs,medium,high,393889.0,0.0027,**
 HateXplain,crehate,low,high,2178.0,1.0,ns
 HateXplain,mhs,low,medium,2178.0,1.0,ns
 HateXplain,mhs,low,high,2178.0,1.0,ns

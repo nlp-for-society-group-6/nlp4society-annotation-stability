@@ -1,6 +1,6 @@
 model,dataset,H_statistic,p_value,significance
-Gemini 2.5 Flash,crehate,1.0388,0.3081,ns
-Gemini 2.5 Flash,mhs,8.3135,0.0157,*
+Gemini 2.5 Flash,crehate,72.1216,0.0,***
+Gemini 2.5 Flash,mhs,215.4989,0.0,***
 HateXplain,crehate,0.0,1.0,ns
 HateXplain,mhs,0.0,1.0,ns
 Llama 3.1 8B,crehate,2.8708,0.0902,ns
