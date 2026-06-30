@@ -231,6 +231,10 @@ class MistralClient(Client):
     No API key needed. Slower on CPU but fully free and local.
     Behaves like other clients (same `generate` signature and `provider`),
     but internally uses a local HF model.
+
+    On GPU, this client first tries 4-bit loading so it can fit in smaller
+    notebook environments such as Kaggle. If 4-bit support is unavailable,
+    it falls back to fp16 on CUDA and float32 on CPU.
     """
     provider = "mistral"
 
@@ -238,16 +242,50 @@ class MistralClient(Client):
         super().__init__(model_name, temperature)
         from transformers import AutoTokenizer, AutoModelForCausalLM
         import torch
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            torch_dtype=torch.float32,  # Use float32 for CPU compatibility
-        )
+        self._torch = torch
+        self._device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+
+        load_kwargs = {
+            "device_map": "auto",
+            "low_cpu_mem_usage": True,
+        }
+
+        if self._device == "cuda":
+            try:
+                from transformers import BitsAndBytesConfig
+
+                load_kwargs["quantization_config"] = BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_quant_type="nf4",
+                    bnb_4bit_compute_dtype=torch.float16,
+                    bnb_4bit_use_double_quant=True,
+                )
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    **load_kwargs,
+                )
+            except Exception:
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    torch_dtype=torch.float16,
+                    **load_kwargs,
+                )
+        else:
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype=torch.float32,
+                **load_kwargs,
+            )
+
+        self.model.eval()
 
     def generate(self, prompt: str, seed: int) -> Completion:
-        import torch
-        torch.manual_seed(seed)
+        self._torch.manual_seed(seed)
+        if self._torch.cuda.is_available():
+            self._torch.cuda.manual_seed_all(seed)
         
         # Build the conversation
         messages = [
@@ -262,13 +300,15 @@ class MistralClient(Client):
         input_len = inputs["input_ids"].shape[1]
 
         # Generate continuation and decode only new tokens
-        outputs = self.model.generate(
-            **inputs,
-            max_new_tokens=20,
-            temperature=self.temperature,
-            top_p=0.9,
-            do_sample=True,
-        )
+        with self._torch.inference_mode():
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=20,
+                temperature=self.temperature,
+                top_p=0.9,
+                do_sample=True,
+                pad_token_id=self.tokenizer.eos_token_id,
+            )
         seq = outputs[0]
         # If model returned input+generation, slice off the input portion
         if seq.shape[0] > input_len:
