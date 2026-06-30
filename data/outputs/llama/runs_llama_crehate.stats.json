@@ -1,0 +1,19 @@
+{
+  "run_file": "data\\outputs\\llama\\runs_llama_crehate.jsonl",
+  "total_rows": 1481,
+  "api_errors": 10,
+  "parsed_ok": 1471,
+  "parse_failures": 0,
+  "parse_failure_reasons": {},
+  "unique_items": 297,
+  "by_model": {
+    "llama-3.1-8b-instant": {
+      "total_rows": 1481,
+      "api_errors": 10,
+      "parsed_ok": 1471,
+      "parse_failures": 0,
+      "parse_failure_reasons": {},
+      "unique_items": 297
+    }
+  }
+}
