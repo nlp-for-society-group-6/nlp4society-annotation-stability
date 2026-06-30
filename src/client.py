@@ -10,8 +10,16 @@ Everything else (seed loops, retries, output format, parsing) is shared.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from enum import Enum
+from typing import Optional, Tuple
 import abc
+
+
+class ErrorAction(Enum):
+    """How the runner should treat a failed generate() call."""
+    RETRY = "retry"   # transient / per-minute throttle: back off and try again
+    STOP = "stop"     # halt the whole run cleanly and resume later (cap / auth)
+    FATAL = "fatal"   # this call cannot recover: log it and skip to the next
 
 
 # The shared system prompt. Frozen for cross-model consistency.
@@ -53,3 +61,24 @@ class Client(abc.ABC):
         """Run one inference at the given seed. Raise on failure;
         the runner handles retries and logs errors as RunRecords."""
         raise NotImplementedError
+
+    def classify_error(self, exc: Exception) -> Tuple[ErrorAction, str]:
+        """Map a generate() exception to (action, kind) using the HTTP status
+        code only: a number the SDK already carries, not the message wording.
+
+        `kind` is a stable category stored on the error RunRecord so Stage 3 can
+        count error types without ever re-parsing exception strings.
+
+        Default covers OpenAI-compatible SDK errors (Groq, Together). Providers
+        whose exceptions lack `status_code` fall through to ("retry", "network").
+        """
+        status = getattr(exc, "status_code", None)
+        if status == 429:
+            return ErrorAction.RETRY, "rate_limit"
+        if status in (401, 403):
+            return ErrorAction.STOP, "auth"          # bad key: every call fails
+        if isinstance(status, int) and 400 <= status < 500:
+            return ErrorAction.FATAL, "bad_request"  # item-specific, won't recover
+        if isinstance(status, int) and 500 <= status < 600:
+            return ErrorAction.RETRY, "server"
+        return ErrorAction.RETRY, "network"          # timeout / connection / unknown
