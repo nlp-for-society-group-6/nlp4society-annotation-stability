@@ -1,0 +1,19 @@
+{
+  "run_file": "data\\outputs\\llama\\runs_llama_mhs.jsonl",
+  "total_rows": 6087,
+  "api_errors": 13,
+  "parsed_ok": 6074,
+  "parse_failures": 0,
+  "parse_failure_reasons": {},
+  "unique_items": 1217,
+  "by_model": {
+    "llama-3.1-8b-instant": {
+      "total_rows": 6087,
+      "api_errors": 13,
+      "parsed_ok": 6074,
+      "parse_failures": 0,
+      "parse_failure_reasons": {},
+      "unique_items": 1217
+    }
+  }
+}
