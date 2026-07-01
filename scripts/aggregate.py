@@ -56,8 +56,9 @@ def main() -> None:
     with open(args.items, encoding="utf-8") as f:
         items = {it.item_id: it for it in (InputItem.from_json(l) for l in f if l.strip())}
 
-    # collect parsed labels per (item, model); write a per-file stats sidecar
-    by_key: dict[tuple[str, str], list[str]] = defaultdict(list)
+    # collect one parsed label per (item, model, seed); write a per-file stats
+    #  each (item, seed) is counted exactly once instead of inflating n_runs.
+    by_key: dict[tuple[str, str], dict[int, str]] = defaultdict(dict)
     for rp in args.runs:
         rp = Path(rp)
         stats = compute_run_stats(rp)
@@ -74,10 +75,11 @@ def main() -> None:
                     continue
                 lab, _ = parse_label(r.raw_text)
                 if lab is not None:
-                    by_key[(r.item_id, r.model_name)].append(lab)
+                    by_key[(r.item_id, r.model_name)].setdefault(r.seed, lab)
 
     rows = []
-    for (item_id, model), labels in by_key.items():
+    for (item_id, model), seed_labels in by_key.items():
+        labels = list(seed_labels.values())
         it = items.get(item_id)
         if it is None:
             continue
