@@ -1,0 +1,19 @@
+{
+  "run_file": "data/outputs/hatexplain/runs_hatexplain_crehate_full.jsonl",
+  "total_rows": 1580,
+  "api_errors": 0,
+  "parsed_ok": 1580,
+  "parse_failures": 0,
+  "parse_failure_reasons": {},
+  "unique_items": 1580,
+  "by_model": {
+    "Hate-speech-CNERG/bert-base-uncased-hatexplain": {
+      "total_rows": 1580,
+      "api_errors": 0,
+      "parsed_ok": 1580,
+      "parse_failures": 0,
+      "parse_failure_reasons": {},
+      "unique_items": 1580
+    }
+  }
+}
